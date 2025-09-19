@@ -35,6 +35,10 @@ This project aims to **predict the mode of action of MIR100HG** using patient da
 - **Normal tissue expression**: GTEx RNA-seq TPM [link](https://xenabrowser.net/datapages/?dataset=gtex_rsem_isoform_tpm&host=https%3A%2F%2Ftoil.xenahubs.net)  
 - **Normal tissue phenotypes**: GTEx phenotype tables  
 
+## Data Access
+Due to size limitations, raw datasets are hosted on OneDrive:  
+[🔗 Download Data (OneDrive)](https://1drv.ms/f/s!AtSPOuyiZcMKcT0YIUPQxLhIZEE?e=p1TSUE)
+
 ## References
 - Consortium, E. P. *et al.* (2007). *Identification and analysis of functional elements in 1% of the human genome by the ENCODE pilot project.* Nature.  
 - Uszczynska-Ratajczak *et al.* (2018). *Towards a complete map of the human lncRNA transcriptome.* Nat. Rev. Genet.  
