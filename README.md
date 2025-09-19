@@ -1,45 +1,50 @@
-# Multi-Omics Regulatory Network Analysis
-### Integrative study of transcriptional and epigenetic regulation across five cancers using TCGA expression, DNA methylation, and ENCODE transcription factors.
+# Multi-Omics Regulatory Network Analysis  
+### Integrative study of transcriptional and epigenetic regulation of MIR100HG across five cancers and matched normal tissues
 
-This repository implements a workflow for integrative analysis of regulatory networks centred on long non-coding RNA (lncRNA) expression in cancer. Focusing on MIR100HG, the pipeline combines RNA-seq expression (TCGA), DNA methylation profiles (Illumina 450K), and curated transcription factor (TF) interactions (ENCODE). It comprises (i) stratification of tumour and normal cohorts into High/Low MIR100HG groups; (ii) differential expression analysis with Welch’s t-tests and Benjamini–Hochberg correction; (iii) promoter methylation–expression correlation analysis; (iv) TF prioritisation via Welch’s tests and Random Forest models; (v) PCA for dimensionality reduction and visualisation; and (vi) a BFS-based network module to classify TFs as direct or indirect regulators.
+## Background  
+Despite most of the mammalian genome being transcribed to RNA, less than 2% encodes proteins, while the vast majority corresponds to non-coding RNAs (ncRNAs) [1]. High-throughput sequencing technologies have revealed thousands of long ncRNAs (lncRNAs, >200 nucleotides), yet only a small proportion has been functionally characterised [2]. LncRNAs have emerged as key regulators of cancer pathways and are considered promising biomarkers and therapeutic targets [3].  
 
-## Project Goal
-The project is designed to characterise the transcriptional and epigenetic landscape of MIR100HG across pancreatic, lung, skin, prostate, and stomach cancers. By integrating multi-omics datasets, it identifies promoter methylation effects, prioritises key TFs (e.g. FOXP2, STAT3, GATA3), and reveals cancer-specific versus cross-cancer regulatory patterns. The workflow provides a reproducible framework for assessing lncRNA-centred networks and their role in tumour biology.
+The **TGF-β signalling pathway** plays a crucial role in cancer. In advanced stages, it acts as an oncogene promoting epithelial-to-mesenchymal transition (EMT), stemness, and metastasis [4]. Our laboratory has previously used RNA-seq to identify TGF-β-regulated lncRNAs in pancreatic ductal adenocarcinoma (PDAC) [5], selecting **MIR100HG** as a promising candidate due to its significant upregulation in cancer patients compared with healthy individuals (TCGA vs. GTEx). Preliminary evidence suggests MIR100HG is TGF-β regulated and may contribute to tumour development.  
 
-## Highlights
-- **End-to-end pipeline**: cohort harmonisation → expression-based subgrouping → differential expression and methylation analysis → TF feature selection → PCA → network module.
-- **Multi-omics integration**: TCGA RNA-seq, Illumina 450K DNA methylation, and ENCODE TF–target annotations combined into cancer-specific data matrices.
-- **TF prioritisation**: Welch’s t-test across subgroups and Random Forest importance scoring (PAAD case study).
-- **Network analysis**: breadth-first search to classify TFs as direct, indirect, or unreachable regulators relative to MIR100HG.
-- **Visualisation**: correlation heatmaps, volcano plots, cross-tissue TF log2FC heatmaps, and PCA scatterplots.
+In parallel, **DNA methylation** is a key epigenetic mechanism, catalysed by DNMT1, DNMT3A, and DNMT3B, with effects depending on genomic context [6]. Promoter methylation typically represses transcription, whereas gene body methylation may activate expression. Transcription factors (TFs) also shape methylation landscapes by recruiting or blocking DNMTs [7]. Recent studies demonstrate that lncRNAs can recruit DNMTs to regulate target gene expression, adding an additional layer of regulation [8]. MIR100HG has also been reported to modulate TGF-β signalling [9].  
 
-## Analysis Framework
-### 1) Expression and Subgrouping
-- Samples stratified into High/Low MIR100HG groups using quantile thresholds (top/bottom 33% for main analysis).
-- Tumour and normal cohorts harmonised to dominant histological subtypes for consistency.
+## Project Goal  
+This project aims to **predict the mode of action of MIR100HG** using patient data from five cancers (PAAD, LUAD, SKCM, PRAD, STAD) and their matched normal tissues. Specifically, we:  
+1. Integrate **TF–target associations, DNA methylation, and gene expression** from TCGA cancer cohorts stratified by High/Low MIR100HG expression.  
+2. Integrate **TF–target associations and gene expression** from GTEx normal tissues to investigate baseline MIR100HG regulation.  
+3. Compare **cancer vs. normal tissues** to identify MIR100HG-driven features that are cancer-specific.  
 
-### 2) Methylation Correlation
-- Promoter CpG probes mapped from Illumina 450K arrays.
-- Pearson correlation with MIR100HG expression, FDR-controlled, retaining negatively correlated probes (ri < –0.2, FDR < 0.05).
+## Methods Overview  
+- **Expression subgrouping**: Samples stratified into High/Low MIR100HG using quantile thresholds (e.g. top/bottom 33%).  
+- **Differential expression**: Welch’s t-test + Benjamini–Hochberg FDR correction across TFs and target genes.  
+- **Methylation analysis**: Correlation of promoter CpG methylation with MIR100HG expression (Illumina 450K).  
+- **TF prioritisation**: Combined statistical tests and Random Forest classification (feature importance scoring).  
+- **Dimensionality reduction & network modelling**: PCA for subgroup visualisation; BFS traversal on ENCODE TF–target graphs to classify TFs as direct or indirect regulators.  
 
-### 3) TF Expression and Prioritisation
-- Differential expression tested via Welch’s t-test with BH correction.
-- For PAAD, a Random Forest classifier ranked TF importance in discriminating High vs. Low MIR100HG.
+## Highlights  
+- End-to-end reproducible pipeline: cohort harmonisation → subgrouping → DE/methylation → TF selection → PCA → network inference.  
+- Multi-omics integration: TCGA RNA-seq, Illumina 450K methylation, ENCODE TF–target edges, GTEx normal expression.  
+- Cancer–normal comparison: identifying **cancer-specific TF regulators** versus cross-cancer conserved signals.  
+- Rich visualisation: volcano plots, correlation heatmaps, cross-tissue log2FC heatmaps, PCA scatterplots.  
 
-### 4) PCA and Network Analysis
-- Principal Component Analysis on TF expression, promoter methylation, and gender metadata to visualise subgroup separation.
-- BFS traversal on curated TF–target networks to classify regulators by shortest path distance to MIR100HG.
-
-## Case Studies
-Findings include promoter hypermethylation repressing MIR100HG in PAAD, cancer-specific shifts in regulatory TFs (e.g. PBX3, FOXP2, STAT3), and convergent cross-cancer upregulation of FOXP2 and GATA3. These results highlight both context-specific and shared regulatory architectures of MIR100HG.
+## Data Sources  
+- **Gene expression (cancers)**: TCGA RNA-seq TPM (log2(TPM+0.001)) [link](https://xenabrowser.net/datapages/?dataset=tcga_RSEM_gene_tpm&host=https%3A%2F%2Ftoil.xenahubs.net)  
+- **TF–target associations**: ENCODE Transcription Factor–Targets (Harmonizome) [link](https://maayanlab.cloud/Harmonizome/dataset/ENCODE+Transcription+Factor+Targets)  
+- **DNA methylation**: TCGA 450k methylation data for PAAD, LUAD, SKCM, PRAD, STAD (Illumina HumanMethylation450 BeadChip)  
+- **Clinical data**: TCGA Pan-Cancer clinical tables (histological subtypes, metadata)  
+- **Normal tissue expression**: GTEx RNA-seq TPM [link](https://xenabrowser.net/datapages/?dataset=gtex_rsem_isoform_tpm&host=https%3A%2F%2Ftoil.xenahubs.net)  
+- **Normal tissue phenotypes**: GTEx phenotype tables  
 
 ## References
+- Consortium, E. P. *et al.* (2007). *Identification and analysis of functional elements in 1% of the human genome by the ENCODE pilot project.* Nature.  
 - Uszczynska-Ratajczak *et al.* (2018). *Towards a complete map of the human lncRNA transcriptome.* Nat. Rev. Genet.  
-- Papoutsoglou *et al.* (2021). *The noncoding MIR100HG RNA enhances autocrine TGF-β signalling.* Oncogene.  
-- Cui *et al.* (2023). *The prognostic role of lncRNA MIR100HG across cancers.* Front. Genet.  
-- Ottaviani *et al.* (2018). *TGF-β induces miR-100 and miR-125b controlling PDAC progression.* Cell Death Dis.  
-- Li *et al.* (2021). *FOXP2 promotes progression of pancreatic cancer via lncRNA regulation.* Mol. Cancer.  
-- Glass *et al.* (2013). *Passing messages between biological networks to refine interactions.* PLoS ONE.  
+- Nemeth *et al.* (2024). *Non-coding RNAs in disease: from mechanisms to therapeutics.* Nat. Rev. Mol. Cell Biol.  
+- Richardson *et al.* (2023). *Context-dependent TGF-β family signalling in cell fate regulation.* Nat. Rev. Mol. Cell Biol.  
+- Ottaviani *et al.* (2018). *TGF-β induces miR-100 and miR-125b but blocks let-7a through LIN28B controlling PDAC progression.* Cell Death Dis.  
+- Jin *et al.* (2012). *Linking DNA methyltransferases to epigenetic marks and nucleosome structure genome-wide in human tumour cells.* Cell Res.  
+- Brenner *et al.* (2005). *Myc represses transcription through recruitment of DNA methyltransferase corepressor.* Nat. Genet.  
+- Huang *et al.* (2022). *LncRNA-mediated DNA methylation: an emerging mechanism in cancer and beyond.* Cell Mol. Life Sci.  
+- Papoutsoglou *et al.* (2021). *The noncoding MIR100HG RNA enhances autocrine function of transforming growth factor beta signalling.* Oncogene.  
 
 ---
 
