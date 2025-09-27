@@ -1,6 +1,8 @@
 # Multi-Omics Regulatory Network Analysis  
 ### Integrative study of transcriptional and epigenetic regulation of MIR100HG across five cancers and matched normal tissues
 
+This repository provides an integrated Python pipeline for studying MIR100HG regulation across TCGA cancers (PAAD, LUAD, PRAD, SKCM, STAD) and GTEx tissues. The pipeline combines transcriptome and DNA methylation data to characterise transcriptional and epigenetic influences on MIR100HG. It employs statistical testing to identify differential expression and methylation–expression associations, and applies machine-learning methods such as Random Forests to prioritise transcription factors, PCA for integrative feature exploration, and network traversal to uncover regulatory pathways.
+
 ## Background  
 Despite most of the mammalian genome being transcribed to RNA, less than 2% encodes proteins, while the vast majority corresponds to non-coding RNAs (ncRNAs) [1]. High-throughput sequencing technologies have revealed thousands of long ncRNAs (lncRNAs, >200 nucleotides), yet only a small proportion has been functionally characterised [2]. LncRNAs have emerged as key regulators of cancer pathways and are considered promising biomarkers and therapeutic targets [3].  
 
