@@ -1,56 +1,103 @@
 # Multi-Omics Regulatory Network Analysis  
-### Integrative study of transcriptional and epigenetic regulation of MIR100HG across five cancers and matched normal tissues
+
+Integrative study of transcriptional and epigenetic regulation of MIR100HG across five cancers and matched normal tissues
+
+## Overview
 
 This repository provides an integrated Python pipeline for studying MIR100HG regulation across TCGA cancers (PAAD, LUAD, PRAD, SKCM, STAD) and GTEx tissues. The pipeline combines transcriptome and DNA methylation data to characterise transcriptional and epigenetic influences on MIR100HG. It employs statistical testing to identify differential expression and methylation–expression associations, and applies machine-learning methods such as Random Forests to prioritise transcription factors, PCA for integrative feature exploration, and network traversal to uncover regulatory pathways.
 
 ## Background  
-Despite most of the mammalian genome being transcribed to RNA, less than 2% encodes proteins, while the vast majority corresponds to non-coding RNAs (ncRNAs) [1]. High-throughput sequencing technologies have revealed thousands of long ncRNAs (lncRNAs, >200 nucleotides), yet only a small proportion has been functionally characterised [2]. LncRNAs have emerged as key regulators of cancer pathways and are considered promising biomarkers and therapeutic targets [3].  
 
-The **TGF-β signalling pathway** plays a crucial role in cancer. In advanced stages, it acts as an oncogene promoting epithelial-to-mesenchymal transition (EMT), stemness, and metastasis [4]. Our laboratory has previously used RNA-seq to identify TGF-β-regulated lncRNAs in pancreatic ductal adenocarcinoma (PDAC) [5], selecting **MIR100HG** as a promising candidate due to its significant upregulation in cancer patients compared with healthy individuals (TCGA vs. GTEx). Preliminary evidence suggests MIR100HG is TGF-β regulated and may contribute to tumour development.  
+Although most of the mammalian genome is transcribed, less than 2% encodes proteins, with the majority corresponding to non-coding RNAs (ncRNAs). Long ncRNAs (lncRNAs, >200 nucleotides) are increasingly recognised as regulators of cancer pathways and as potential biomarkers. The TGF-β pathway, which promotes epithelial-to-mesenchymal transition (EMT), stemness, and metastasis in advanced cancer, has been linked to MIR100HG, a lncRNA upregulated in pancreatic ductal adenocarcinoma (PDAC) compared with normal tissues (TCGA vs GTEx). Epigenetic mechanisms such as DNA methylation further influence gene expression, and interactions among transcription factors, DNMTs, and lncRNAs provide additional regulatory complexity.
 
-In parallel, **DNA methylation** is a key epigenetic mechanism, catalysed by DNMT1, DNMT3A, and DNMT3B, with effects depending on genomic context [6]. Promoter methylation typically represses transcription, whereas gene body methylation may activate expression. Transcription factors (TFs) also shape methylation landscapes by recruiting or blocking DNMTs [7]. Recent studies demonstrate that lncRNAs can recruit DNMTs to regulate target gene expression, adding an additional layer of regulation [8]. MIR100HG has also been reported to modulate TGF-β signalling [9].  
+In this context, machine learning provides a powerful framework to characterise the complex and multi-layered regulation of lncRNAs such as MIR100HG. The interplay between transcription factors, DNA methylation, and transcriptional output involves high-dimensional and often non-linear relationships that are difficult to capture with conventional analyses. By systematically integrating transcriptomic, epigenetic, and regulatory network information, machine learning approaches enable the detection of subtle patterns, classification of molecular subgroups, and prioritisation of key regulatory factors.
 
 ## Project Goal  
-This project aims to **predict the mode of action of MIR100HG** using patient data from five cancers (PAAD, LUAD, SKCM, PRAD, STAD) and their matched normal tissues. Specifically, we:  
-1. Integrate **TF–target associations, DNA methylation, and gene expression** from TCGA cancer cohorts stratified by High/Low MIR100HG expression.  
-2. Integrate **TF–target associations and gene expression** from GTEx normal tissues to investigate baseline MIR100HG regulation.  
-3. Compare **cancer vs. normal tissues** to identify MIR100HG-driven features that are cancer-specific.  
 
-## Methods Overview  
-- **Expression subgrouping**: Samples stratified into High/Low MIR100HG using quantile thresholds (e.g. top/bottom 33%).  
-- **Differential expression**: Welch’s t-test + Benjamini–Hochberg FDR correction across TFs and target genes.  
-- **Methylation analysis**: Correlation of promoter CpG methylation with MIR100HG expression (Illumina 450K).  
-- **TF prioritisation**: Combined statistical tests and Random Forest classification (feature importance scoring).  
-- **Dimensionality reduction & network modelling**: PCA for subgroup visualisation; BFS traversal on ENCODE TF–target graphs to classify TFs as direct or indirect regulators.  
+This project aims to predict the regulatory role of MIR100HG using patient data from five cancers (PAAD, LUAD, SKCM, PRAD, STAD) and their corresponding normal tissues. Specifically, it:
+1. Integrates transcription factor–target associations, DNA methylation, and gene expression from TCGA cohorts stratified by high and low MIR100HG expression. 
+2. Combines transcription factor–target associations and gene expression from GTEx normal tissues to investigate baseline MIR100HG regulation.
+3. Compares cancer and normal tissues to identify MIR100HG-associated features that are specific to malignant contexts.
 
-## Highlights  
-- End-to-end reproducible pipeline: cohort harmonisation → subgrouping → DE/methylation → TF selection → PCA → network inference.  
-- Multi-omics integration: TCGA RNA-seq, Illumina 450K methylation, ENCODE TF–target edges, GTEx normal expression.  
-- Cancer–normal comparison: identifying **cancer-specific TF regulators** versus cross-cancer conserved signals.  
-- Rich visualisation: volcano plots, correlation heatmaps, cross-tissue log2FC heatmaps, PCA scatterplots.  
+## Key Analyses
+
+- **Supervised Learning: Random Forest Classification**  
+  - **Task**: Predict MIR100HG high/low expression states and prioritise transcription factors (TFs) that best explain subgroup membership across cancers and matched normal tissues.  
+  - **Method**: Train Random Forest models on integrated features (TF expression, promoter methylation, and selected clinical covariates) and interpret global feature-importance profiles; compare rankings between cancer and normal to detect context shifts.  
+  - **Output**: Reliable discrimination of MIR100HG subgroups and a concise, rank-ordered TF short‑list. In PAAD, normal pancreas emphasises MAX/RCOR1/NRF1, whereas tumours prioritise PBX3/FOXP2/STAT3; NR3C1 and TCF12 remain shared, highlighting candidate regulators for follow‑up.  
+
+- **Differential Expression**  
+  - **Task**: Identify TFs and targets associated with MIR100HG-high vs. MIR100HG-low states.  
+  - **Method**: Quantile-based subgrouping, Welch’s t-tests with FDR control, and cross‑tissue aggregation.  
+  - **Output**: Volcano tables/plots and cross‑tissue heat maps. Patterns reveal a strong normal–tumour shift (e.g., broad TF upregulation with high MIR100HG in normal pancreas versus attenuated or reversed effects in PAAD) and recurrent tumour‑specific upregulation of FOXP2 and GATA3 across multiple cancers.  
+
+- **Dimensionality Reduction**  
+  - **Task**: Summarise multi‑omics structure underlying MIR100HG phenotypes and visualise subgroup separation.  
+  - **Method**: PCA on TF expression, promoter methylation, and clinical covariates; loading analysis to identify drivers of variance.  
+  - **Output**: Partial separation of MIR100HG subgroups; promoter methylation loads negatively, TFs such as FOXP2 load positively, and clinical covariates (e.g., sex) contribute minimally—supporting a transcriptional/epigenetic axis linked to MIR100HG.  
+
+- **Network Modelling**  
+  - **Task**: Place candidate TFs within mechanistic routes leading to MIR100HG regulation.  
+  - **Method**: Construct a directed TF–gene graph (ENCODE) and apply breadth‑first search to classify TFs as direct or indirect by shortest‑path distance; use network proximity to contextualise ML‑derived rankings.  
+  - **Output**: Network‑aware prioritisation that highlights proximal regulators and plausible regulatory paths to MIR100HG, guiding experimental validation and hypothesis generation.  
 
 ## Data Sources  
-- **Gene expression (cancers)**: TCGA RNA-seq TPM (log2(TPM+0.001)) [link](https://xenabrowser.net/datapages/?dataset=tcga_RSEM_gene_tpm&host=https%3A%2F%2Ftoil.xenahubs.net)  
-- **TF–target associations**: ENCODE Transcription Factor–Targets (Harmonizome) [link](https://maayanlab.cloud/Harmonizome/dataset/ENCODE+Transcription+Factor+Targets)  
-- **DNA methylation**: TCGA 450k methylation data for PAAD, LUAD, SKCM, PRAD, STAD (Illumina HumanMethylation450 BeadChip)  
-- **Clinical data**: TCGA Pan-Cancer clinical tables (histological subtypes, metadata)  
-- **Normal tissue expression**: GTEx RNA-seq TPM [link](https://xenabrowser.net/datapages/?dataset=gtex_rsem_isoform_tpm&host=https%3A%2F%2Ftoil.xenahubs.net)  
-- **Normal tissue phenotypes**: GTEx phenotype tables  
+
+- **Gene expression (cancer samples)**  
+  - TPM (Transcripts Per Kilobase Million) gene expression levels were downloaded from:  
+    [TCGA RNA-seq TPM](https://xenabrowser.net/datapages/?dataset=tcga_RSEM_gene_tpm&host=https%3A%2F%2Ftoil.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443).  
+  - TPM values are provided as log2(TPM + 0.001).  
+  - The data were split into separate files for each cancer type, with HGNC gene symbols added to each entry.  
+
+- **TF–target associations**  
+  - ENCODE Transcription Factor–Target datasets were downloaded from Harmonizome:  
+    [ENCODE TF–Target associations](https://maayanlab.cloud/Harmonizome/dataset/ENCODE+Transcription+Factor+Targets).  
+  - Additional files with different formats and processed genes are available at the same source.  
+
+- **DNA methylation (450k array, Illumina HumanMethylation450 BeadChip)**  
+  - Pancreatic cancer (PAAD): [TCGA.PAAD.sampleMap/HumanMethylation450](https://xenabrowser.net/datapages/?dataset=TCGA.PAAD.sampleMap%2FHumanMethylation450&host=https%3A%2F%2Ftcga.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)  
+  - Lung adenocarcinoma (LUAD): [TCGA.LUAD.sampleMap/HumanMethylation450](https://xenabrowser.net/datapages/?dataset=TCGA.LUAD.sampleMap%2FHumanMethylation450&host=https%3A%2F%2Ftcga.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)  
+  - Skin cutaneous melanoma (SKCM): [TCGA.SKCM.sampleMap/HumanMethylation450](https://xenabrowser.net/datapages/?dataset=TCGA.SKCM.sampleMap%2FHumanMethylation450&host=https%3A%2F%2Ftcga.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)  
+  - Prostate adenocarcinoma (PRAD): [TCGA.PRAD.sampleMap/HumanMethylation450](https://xenabrowser.net/datapages/?dataset=TCGA.PRAD.sampleMap%2FHumanMethylation450&host=https%3A%2F%2Ftcga.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)  
+  - Stomach adenocarcinoma (STAD): [TCGA.STAD.sampleMap/HumanMethylation450](https://xenabrowser.net/datapages/?dataset=TCGA.STAD.sampleMap%2FHumanMethylation450&host=https%3A%2F%2Ftcga.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)  
+  - ID/Gene mapping file: *probeMap_illuminaMethyl450_hg19_GPL16304_TCGAlegacy* downloaded from [Xena Browser](https://xenabrowser.net).  
+
+- **Gene annotation**  
+  - Genome reference: hg19 annotation file (*geneAnnotation_hg19_basicgenes.txt*).  
+  - Downloaded using **annotatr** and **TxDb.Hsapiens.UCSC.hg19.knownGene** R packages.  
+  - Includes details of gene regions such as promoters, exons, and 5′UTRs.  
+
+- **Clinical information**  
+  - File: *Survival_SupplementalTable_S1_20171025_xena_sp*  
+  - Downloaded from:  
+    [TCGA Pan-Cancer clinical tables](https://xenabrowser.net/datapages/?cohort=TCGA%20PanCancer%20(PANCAN)&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443).  
+  - Contains metadata for all patients included in TCGA Pan-Cancer studies, not limited to the five cancers selected here.  
+
+- **Gene expression (normal tissues)**  
+  - Expression data from GTEx:  
+    [GTEx RNA-seq TPM](https://xenabrowser.net/datapages/?dataset=gtex_rsem_isoform_tpm&host=https%3A%2F%2Ftoil.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443).  
+  - HGNC gene symbols added to each entry.  
+
+- **Phenotypes (normal tissues)**  
+  - Phenotype data from GTEx:  
+    [GTEx phenotype tables](https://xenabrowser.net/datapages/?dataset=GTEX_phenotype&host=https%3A%2F%2Ftoil.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443).  
+  - Only phenotypes corresponding to the five selected tissues (pancreas, lung, prostate, skin, stomach) were used.  
+  - GTEx sample ID format: `GTEX-[donor ID]-[tissue site ID]-SM-[aliquot ID]`.  
 
 ## Data Access
 Due to size limitations, raw datasets are hosted on OneDrive:  
 [🔗 Download Data (OneDrive)](https://1drv.ms/f/s!AtSPOuyiZcMKcT0YIUPQxLhIZEE?e=p1TSUE)
 
 ## References
-- Consortium, E. P. *et al.* (2007). *Identification and analysis of functional elements in 1% of the human genome by the ENCODE pilot project.* Nature.  
-- Uszczynska-Ratajczak *et al.* (2018). *Towards a complete map of the human lncRNA transcriptome.* Nat. Rev. Genet.  
-- Nemeth *et al.* (2024). *Non-coding RNAs in disease: from mechanisms to therapeutics.* Nat. Rev. Mol. Cell Biol.  
-- Richardson *et al.* (2023). *Context-dependent TGF-β family signalling in cell fate regulation.* Nat. Rev. Mol. Cell Biol.  
-- Ottaviani *et al.* (2018). *TGF-β induces miR-100 and miR-125b but blocks let-7a through LIN28B controlling PDAC progression.* Cell Death Dis.  
-- Jin *et al.* (2012). *Linking DNA methyltransferases to epigenetic marks and nucleosome structure genome-wide in human tumour cells.* Cell Res.  
-- Brenner *et al.* (2005). *Myc represses transcription through recruitment of DNA methyltransferase corepressor.* Nat. Genet.  
-- Huang *et al.* (2022). *LncRNA-mediated DNA methylation: an emerging mechanism in cancer and beyond.* Cell Mol. Life Sci.  
-- Papoutsoglou *et al.* (2021). *The noncoding MIR100HG RNA enhances autocrine function of transforming growth factor beta signalling.* Oncogene.  
+- Consortium, E. P. *et al.* (2007). *Identification and analysis of functional elements in 1% of the human genome by the ENCODE pilot project.* **Nature**.  
+- Uszczynska-Ratajczak *et al.* (2018). *Towards a complete map of the human lncRNA transcriptome.* **Nature Reviews Genetics**.  
+- Nemeth *et al.* (2024). *Non-coding RNAs in disease: from mechanisms to therapeutics.* **Nature Reviews Molecular Cell Biology**.  
+- Richardson *et al.* (2023). *Context-dependent TGF-β family signalling in cell fate regulation.* **Nature Reviews Molecular Cell Biology**.  
+- Ottaviani *et al.* (2018). *TGF-β induces miR-100 and miR-125b but blocks let-7a through LIN28B controlling PDAC progression.* **Cell Death & Disease**.  
+- Jin *et al.* (2012). *Linking DNA methyltransferases to epigenetic marks and nucleosome structure genome-wide in human tumour cells.* **Cell Research**.  
+- Brenner *et al.* (2005). *Myc represses transcription through recruitment of DNA methyltransferase corepressor.* **Nature Genetics**.  
+- Huang *et al.* (2022). *LncRNA-mediated DNA methylation: an emerging mechanism in cancer and beyond.* **Cell and Molecular Life Sciences**.  
+- Papoutsoglou *et al.* (2021). *The noncoding MIR100HG RNA enhances autocrine function of transforming growth factor beta signalling.* **Oncogene**.  
 
 ---
 
