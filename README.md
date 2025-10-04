@@ -1,6 +1,6 @@
 # Multi-Omics Regulatory Network Analysis  
 
-Integrative study of transcriptional and epigenetic regulation of MIR100HG across five cancers and matched normal tissues
+Integrative study of transcriptional and epigenetic regulation of MIR100HG across five cancers (PAAD, LUAD, PRAD, SKCM, STAD) and their matched GTEx normal tissues.
 
 ## Overview
 
@@ -10,7 +10,7 @@ This repository provides an integrated Python pipeline for studying MIR100HG reg
 
 Although most of the mammalian genome is transcribed, less than 2% encodes proteins, with the majority corresponding to non-coding RNAs (ncRNAs). Long ncRNAs (lncRNAs, >200 nucleotides) are increasingly recognised as regulators of cancer pathways and as potential biomarkers. The TGF-β pathway, which promotes epithelial-to-mesenchymal transition (EMT), stemness, and metastasis in advanced cancer, has been linked to MIR100HG, a lncRNA upregulated in pancreatic ductal adenocarcinoma (PDAC) compared with normal tissues (TCGA vs GTEx). Epigenetic mechanisms such as DNA methylation further influence gene expression, and interactions among transcription factors, DNMTs, and lncRNAs provide additional regulatory complexity.
 
-In this context, machine learning provides a powerful framework to characterise the complex and multi-layered regulation of lncRNAs such as MIR100HG. The interplay between transcription factors, DNA methylation, and transcriptional output involves high-dimensional and often non-linear relationships that are difficult to capture with conventional analyses. By systematically integrating transcriptomic, epigenetic, and regulatory network information, machine learning approaches enable the detection of subtle patterns, classification of molecular subgroups, and prioritisation of key regulatory factors.
+Traditional approaches to studying lncRNA regulation often consider gene expression or DNA methylation in isolation, yet the regulation of MIR100HG emerges from the interplay of transcription factors, DNA methylation, and lncRNA-mediated feedback. To address this complexity, this study applies machine learning techniques to integrate transcriptomic, epigenetic, and regulatory network data. This multi-layer approach enables the capture of non-linear interactions, the identification of molecular subgroups across cancer and normal tissues, and the prioritisation of transcription factors most strongly associated with MIR100HG activity.
 
 ## Project Goal  
 
