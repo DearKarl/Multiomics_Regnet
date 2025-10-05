@@ -22,24 +22,24 @@ This project aims to predict the regulatory role of MIR100HG using patient data 
 ## Key Analyses
 
 - **Supervised Learning: Random Forest Classification**  
-  - **Task**: Predict MIR100HG high/low expression states and prioritise transcription factors (TFs) that best explain subgroup membership across cancers and matched normal tissues.  
-  - **Method**: Train Random Forest models on integrated features (TF expression, promoter methylation, and selected clinical covariates) and interpret global feature-importance profiles; compare rankings between cancer and normal to detect context shifts.  
-  - **Output**: Reliable discrimination of MIR100HG subgroups and a concise, rank-ordered TF short‑list. In PAAD, normal pancreas emphasises MAX/RCOR1/NRF1, whereas tumours prioritise PBX3/FOXP2/STAT3; NR3C1 and TCF12 remain shared, highlighting candidate regulators for follow‑up.  
+  - **Task:** Predict MIR100HG high/low expression states and prioritise transcription factors (TFs) that best explain subgroup membership across cancers and matched normal tissues.  
+  - **Method:** Train Random Forest models on integrated features (TF expression, promoter methylation, and selected clinical covariates) and interpret global feature-importance profiles; compare rankings between cancer and normal to detect context shifts.  
+  - **Output:** Reliable discrimination of MIR100HG subgroups and a concise, rank-ordered TF short‑list. In PAAD, normal pancreas emphasises MAX/RCOR1/NRF1, whereas tumours prioritise PBX3/FOXP2/STAT3; NR3C1 and TCF12 remain shared, highlighting candidate regulators for follow‑up.  
 
 - **Differential Expression**  
-  - **Task**: Identify TFs and targets associated with MIR100HG-high vs. MIR100HG-low states.  
-  - **Method**: Quantile-based subgrouping, Welch’s t-tests with FDR control, and cross‑tissue aggregation.  
-  - **Output**: Volcano tables/plots and cross‑tissue heat maps. Patterns reveal a strong normal–tumour shift (e.g., broad TF upregulation with high MIR100HG in normal pancreas versus attenuated or reversed effects in PAAD) and recurrent tumour‑specific upregulation of FOXP2 and GATA3 across multiple cancers.  
+  - **Task:** Identify TFs and targets associated with MIR100HG-high vs. MIR100HG-low states.  
+  - **Method:** Quantile-based subgrouping, Welch’s t-tests with FDR control, and cross‑tissue aggregation.  
+  - **Output:** Volcano tables/plots and cross‑tissue heat maps. Patterns reveal a strong normal–tumour shift (e.g., broad TF upregulation with high MIR100HG in normal pancreas versus attenuated or reversed effects in PAAD) and recurrent tumour‑specific upregulation of FOXP2 and GATA3 across multiple cancers.  
 
 - **Dimensionality Reduction**  
-  - **Task**: Summarise multi‑omics structure underlying MIR100HG phenotypes and visualise subgroup separation.  
-  - **Method**: PCA on TF expression, promoter methylation, and clinical covariates; loading analysis to identify drivers of variance.  
-  - **Output**: Partial separation of MIR100HG subgroups; promoter methylation loads negatively, TFs such as FOXP2 load positively, and clinical covariates (e.g., sex) contribute minimally—supporting a transcriptional/epigenetic axis linked to MIR100HG.  
+  - **Task:** Summarise multi‑omics structure underlying MIR100HG phenotypes and visualise subgroup separation.  
+  - **Method:** PCA on TF expression, promoter methylation, and clinical covariates; loading analysis to identify drivers of variance.  
+  - **Output:** Partial separation of MIR100HG subgroups; promoter methylation loads negatively, TFs such as FOXP2 load positively, and clinical covariates (e.g., sex) contribute minimally—supporting a transcriptional/epigenetic axis linked to MIR100HG.  
 
 - **Network Modelling**  
-  - **Task**: Place candidate TFs within mechanistic routes leading to MIR100HG regulation.  
-  - **Method**: Construct a directed TF–gene graph (ENCODE) and apply breadth‑first search to classify TFs as direct or indirect by shortest‑path distance; use network proximity to contextualise ML‑derived rankings.  
-  - **Output**: Network‑aware prioritisation that highlights proximal regulators and plausible regulatory paths to MIR100HG, guiding experimental validation and hypothesis generation.  
+  - **Task:** Place candidate TFs within mechanistic routes leading to MIR100HG regulation.  
+  - **Method:** Construct a directed TF–gene graph (ENCODE) and apply breadth‑first search to classify TFs as direct or indirect by shortest‑path distance; use network proximity to contextualise ML‑derived rankings.  
+  - **Output:** Network‑aware prioritisation that highlights proximal regulators and plausible regulatory paths to MIR100HG, guiding experimental validation and hypothesis generation.  
 
 ## Data Sources  
 
@@ -64,7 +64,7 @@ This project aims to predict the regulatory role of MIR100HG using patient data 
 
 - **Gene annotation**  
   - Genome reference: hg19 annotation file (*geneAnnotation_hg19_basicgenes.txt*).  
-  - Downloaded using **annotatr** and **TxDb.Hsapiens.UCSC.hg19.knownGene** R packages.  
+  - Downloaded using **annotatr** and **TxDb.Hsapiens.UCSC.hg19.knownGene** packages.  
   - Includes details of gene regions such as promoters, exons, and 5′UTRs.  
 
 - **Clinical information**  
